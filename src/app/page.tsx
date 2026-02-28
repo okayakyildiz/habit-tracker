@@ -14,7 +14,13 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const init = useHabitStore((s) => s.init);
+  const loading = useHabitStore((s) => s.loading);
+
+  useEffect(() => {
+    setMounted(true);
+    init();
+  }, [init]);
 
   const habits = useHabitStore((s) => s.habits);
   const { total, completed } = useHabitStore((s) => s.getTodayStats());
@@ -32,10 +38,13 @@ export default function Home() {
     return "İyi akşamlar";
   };
 
-  if (!mounted) {
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: "#F5F2F2" }}>
-        <div className="w-8 h-8 rounded-full border-3 border-t-transparent animate-spin" style={{ borderColor: "#5A7ACD", borderTopColor: "transparent" }} />
+        <div
+          className="w-8 h-8 rounded-full animate-spin"
+          style={{ border: "3px solid #E8E4E4", borderTopColor: "#5A7ACD" }}
+        />
       </div>
     );
   }
