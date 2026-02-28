@@ -16,6 +16,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const init = useHabitStore((s) => s.init);
   const loading = useHabitStore((s) => s.loading);
+  const error = useHabitStore((s) => s.error);
 
   useEffect(() => {
     setMounted(true);
@@ -45,6 +46,25 @@ export default function Home() {
           className="w-8 h-8 rounded-full animate-spin"
           style={{ border: "3px solid #E8E4E4", borderTopColor: "#5A7ACD" }}
         />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: "#F5F2F2" }}>
+        <div className="text-center">
+          <div className="text-4xl mb-3">⚠️</div>
+          <p className="font-semibold mb-1" style={{ color: "#2B2A2A" }}>Bağlantı hatası</p>
+          <p className="text-sm mb-4" style={{ color: "#999" }}>{error}</p>
+          <button
+            onClick={() => init()}
+            className="px-5 py-2 rounded-xl text-sm font-medium text-white"
+            style={{ background: "#5A7ACD" }}
+          >
+            Tekrar Dene
+          </button>
+        </div>
       </div>
     );
   }

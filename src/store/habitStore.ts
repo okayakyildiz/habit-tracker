@@ -15,6 +15,7 @@ interface HabitStore {
   habits: Habit[];
   logs: HabitLog[];
   loading: boolean;
+  error: string | null;
 
   // Init
   init: () => Promise<void>;
@@ -41,11 +42,17 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
   habits: [],
   logs: [],
   loading: true,
+  error: null,
 
   init: async () => {
-    set({ loading: true });
-    const [habits, logs] = await Promise.all([fetchHabits(), fetchAllLogs()]);
-    set({ habits, logs, loading: false });
+    set({ loading: true, error: null });
+    try {
+      const [habits, logs] = await Promise.all([fetchHabits(), fetchAllLogs()]);
+      set({ habits, logs, loading: false });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Bağlantı hatası";
+      set({ loading: false, error: msg });
+    }
   },
 
   addHabit: async (data) => {
