@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useHabitStore } from "@/store/habitStore";
 import { HabitItem } from "@/components/HabitItem";
@@ -12,6 +12,9 @@ import { today, formatDate } from "@/lib/utils";
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all");
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const habits = useHabitStore((s) => s.habits);
   const { total, completed } = useHabitStore((s) => s.getTodayStats());
@@ -28,6 +31,14 @@ export default function Home() {
     if (h < 18) return "İyi günler";
     return "İyi akşamlar";
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#F5F2F2" }}>
+        <div className="w-8 h-8 rounded-full border-3 border-t-transparent animate-spin" style={{ borderColor: "#5A7ACD", borderTopColor: "transparent" }} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ background: "#F5F2F2" }}>
